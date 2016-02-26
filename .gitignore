@@ -1,0 +1,4 @@
+tools/
+wp-app-manifest.zip
+wp-app-manifest/composer.lock
+wp-app-manifest/vendor/
