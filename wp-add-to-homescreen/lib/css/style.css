@@ -1,0 +1,71 @@
+
+#wp-add-to-homescreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  pointer-events: none;
+  z-index: 200000;
+  opacity: 0.0;
+  transition: opacity 400ms;
+  color: white;
+  font-family: inherit;
+  background-color: #D53C30;
+}
+
+#wp-add-to-homescreen-overlay.shown {
+  opacity: 1.0;
+  pointer-events: auto;
+}
+
+#wp-add-to-homescreen-overlay .invitation {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+#wp-add-to-homescreen-overlay .instructions {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+#wp-add-to-homescreen-overlay img {
+  display: block;
+  margin: 2rem auto;
+  height: 30%;
+  box-shadow: rgba(0,0,0,0.6) 0 0 2.5rem 0;
+}
+
+#wp-add-to-homescreen-overlay q {
+  font-style: italic;
+}
+
+#wp-add-to-homescreen-overlay .dismiss {
+  display: block;
+  margin: 0 auto;
+}
+
+body.noscroll {
+  overflow: hidden;
+}
+
+#wp-add-to-homescreen-button {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 5rem;
+  background-image: url('../imgs/add2home.png');
+  height: 5rem;
+  background-color: transparent;
+  background-size: cover;
+  opacity: 1.0;
+  transition: opacity 400ms;
+  pointer-events: auto;
+}
+
+#wp-add-to-homescreen-button.hidden {
+  opacity: 0.0;
+  pointer-events: none;
+}
