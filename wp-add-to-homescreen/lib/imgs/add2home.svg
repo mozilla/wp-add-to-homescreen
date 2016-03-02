@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="14mm"
+   height="14mm"
+   viewBox="0 0 49.6063 49.606299"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="add2home.svg"
+   inkscape:export-filename="/Users/salva/workspace/wp-add-to-homescreen/wp-add-to-homescreen/lib/imgs/add2home.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150">
+  <defs
+     id="defs4">
+    <symbol
+       id="symbol14535">
+      <title
+         id="title14537">Smartphone</title>
+      <path
+         d="M 34,2.02 14,2 c -2.21,0 -4,1.79 -4,4 l 0,36 c 0,2.21 1.79,4 4,4 l 20,0 c 2.21,0 4,-1.79 4,-4 L 38,6 C 38,3.79 36.21,2.02 34,2.02 Z m 0,35.98 -20,0 0,-28 20,0 0,28 z"
+         style="stroke:none"
+         id="path14539"
+         inkscape:connector-curvature="0" />
+    </symbol>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="-0.95402618"
+     inkscape:cy="-10.106878"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="2560"
+     inkscape:window-height="1391"
+     inkscape:window-x="1280"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-358.04724,-498.5748)">
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect22002"
+       width="22.67857"
+       height="30.17857"
+       x="371.44009"
+       y="508.35968" />
+    <g
+       id="use27067"
+       style="fill:#000000;stroke:#000000"
+       transform="translate(358.85039,499.37795)">
+      <title
+         id="title27087">Smartphone</title>
+      <path
+         id="path27089"
+         style="stroke:none"
+         d="M 34,2.02 14,2 c -2.21,0 -4,1.79 -4,4 l 0,36 c 0,2.21 1.79,4 4,4 l 20,0 c 2.21,0 4,-1.79 4,-4 L 38,6 C 38,3.79 36.21,2.02 34,2.02 Z m 0,35.98 -20,0 0,-28 20,0 0,28 z"
+         inkscape:connector-curvature="0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:17.08722687px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="375.69177"
+       y="528.73438"
+       id="text27081"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan27083"
+         x="375.69177"
+         y="528.73438">+</tspan></text>
+  </g>
+</svg>

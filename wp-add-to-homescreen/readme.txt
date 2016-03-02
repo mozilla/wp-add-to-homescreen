@@ -6,7 +6,7 @@ Tested up to: 4.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Generate a Web App Manifest for your website.
+Make your WordPress sites to appear in mobile home screens.
 
 == Installation ==
 1. Install the plugin from the WordPress.org plugin directory
