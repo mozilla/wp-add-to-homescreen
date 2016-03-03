@@ -1,4 +1,3 @@
 tools/
-wp-app-manifest.zip
-wp-app-manifest/composer.lock
-wp-app-manifest/vendor/
+wp-add-to-homescreen/composer.lock
+wp-add-to-homescreen/vendor/
