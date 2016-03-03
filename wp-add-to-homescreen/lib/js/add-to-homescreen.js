@@ -3,6 +3,7 @@
   'use strict';
 
   var window = globals;
+  var navigator = window.navigator;
   var document = window.document;
 
   var wpAddToHomescreen = globals.wpAddToHomescreen = {
@@ -31,7 +32,6 @@
       button.onclick = this.overlay.show;
       container.appendChild(button);
       window.addEventListener('scroll', function () {
-        console.log(window.innerHeight + window.scrollY);
         if (window.scrollY > 0) {
           button.classList.add('hidden');
         }
@@ -51,7 +51,15 @@
     },
 
     detectBrowser: function () {
-      return 'fennec';
+      if (/Gecko\/[\d\.]+ Firefox\/[\d\.]+/.test(navigator.userAgent)) {
+        return 'fennec';
+      }
+      else if (/Chrome\/[\d\.]+/.test(navigator.userAgent)) {
+        return 'chrome';
+      }
+      else {
+        return null;
+      }
     },
 
     detectPlatform: function () {
@@ -104,6 +112,14 @@
         var p = document.createElement('P');
         p.innerHTML = '<strong>Long press</strong> the navigation bar and tap ' +
                       'on <q>Add to Home Screen</q>.';
+        buffer.appendChild(p);
+        return buffer;
+      },
+      chrome: function (setup) {
+        var buffer = document.createDocumentFragment();
+        var p = document.createElement('P');
+        p.innerHTML = '<strong>Tap on menu</strong> then tap on <q>Add to ' +
+                      'Home Screen</q>.';
         buffer.appendChild(p);
         return buffer;
       }

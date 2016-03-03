@@ -69,3 +69,9 @@ body.noscroll {
   opacity: 0.0;
   pointer-events: none;
 }
+
+@media (display-mode: standalone) {
+  #wp-add-to-homescreen-button {
+    visibility: hidden;
+  }
+}

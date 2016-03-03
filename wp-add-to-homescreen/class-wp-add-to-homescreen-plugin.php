@@ -1,6 +1,7 @@
 <?php
 
 // TODO: Load manifest plugin
+include_once(plugin_dir_path(__FILE__) . 'vendor/marco-c/wp-web-app-manifest-generator/WebAppManifestGenerator.php');
 
 class WP_Add_To_Homescreen_Plugin {
     private static $instance;
@@ -23,6 +24,7 @@ class WP_Add_To_Homescreen_Plugin {
     private function __construct() {
         $plugin_main_file = plugin_dir_path(__FILE__) . 'wp-add-to-homescreen.php';
         $this->set_urls();
+        $this->generate_manifest();
         add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
         register_activation_hook($plugin_main_file, array($this, 'activate'));
         register_deactivation_hook($plugin_main_file, array($this, 'deactivate'));
@@ -35,6 +37,21 @@ class WP_Add_To_Homescreen_Plugin {
             __FILE__
         );
         $this->add2home_style = plugins_url('/lib/css/style.css', __FILE__);
+    }
+
+    private function generate_manifest() {
+        $manifest = WebAppManifestGenerator::getInstance();
+        $manifest->set_field('name', get_bloginfo('name'));
+        $manifest->set_field('display', 'standalone');
+        $manifest->set_field('orientation', 'portrait');
+        $manifest->set_field('start_url', home_url('/', 'relative'));
+        $manifest->set_field('icons', array(
+            array(
+                'src' => plugins_url('/lib/imgs/rocket.png', __FILE__),
+                'sizes' => '120x120',
+                'type' => 'image/png'
+            )
+        ));
     }
 
     public function enqueue_assets() {
