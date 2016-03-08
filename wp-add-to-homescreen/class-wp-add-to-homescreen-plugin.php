@@ -2,6 +2,7 @@
 
 // TODO: Load manifest plugin
 include_once(plugin_dir_path(__FILE__) . 'vendor/marco-c/wp-web-app-manifest-generator/WebAppManifestGenerator.php');
+include_once(plugin_dir_path(__FILE__) . 'vendor/mozilla/wp-sw-manager/class-wp-sw-manager.php');
 
 class WP_Add_To_Homescreen_Plugin {
     private static $instance;
@@ -25,6 +26,7 @@ class WP_Add_To_Homescreen_Plugin {
         $plugin_main_file = plugin_dir_path(__FILE__) . 'wp-add-to-homescreen.php';
         $this->set_urls();
         $this->generate_manifest();
+        $this->generate_sw();
         add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
         register_activation_hook($plugin_main_file, array($this, 'activate'));
         register_deactivation_hook($plugin_main_file, array($this, 'deactivate'));
@@ -48,10 +50,15 @@ class WP_Add_To_Homescreen_Plugin {
         $manifest->set_field('icons', array(
             array(
                 'src' => plugins_url('/lib/imgs/rocket.png', __FILE__),
-                'sizes' => '120x120',
+                'sizes' => '144x144',
                 'type' => 'image/png'
             )
         ));
+    }
+
+    private function generate_sw() {
+        // An empty SW only to meet Chrome add to homescreen banner requirements.
+        WP_SW_Manager::get_manager()->sw()->add_content(function () { });
     }
 
     public function enqueue_assets() {
