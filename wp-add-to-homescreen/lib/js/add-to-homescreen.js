@@ -1,5 +1,5 @@
 
-(function(globals, setup){
+(function(globals, setup, isMobile){
   'use strict';
 
   var window = globals;
@@ -22,8 +22,11 @@
     },
 
     init: function (overlayContainer, buttonContainer) {
-      this.overlay.element = this.installOverlay(overlayContainer);
-      this.installAddToHomescreenButton(buttonContainer);
+      if (this.isPlatformSupported()) {
+        alert('isMobile!!');
+        this.overlay.element = this.installOverlay(overlayContainer);
+        this.installAddToHomescreenButton(buttonContainer);
+      }
     },
 
     installAddToHomescreenButton: function (container) {
@@ -48,6 +51,10 @@
       var overlay = this.buildOverlay(browser, platform);
       container.appendChild(overlay);
       return overlay;
+    },
+
+    isPlatformSupported: function () {
+      return isMobile.any;
     },
 
     detectBrowser: function () {
@@ -127,4 +134,4 @@
 
   };
 
-})(window, wpAddToHomescreenSetup);
+})(window, wpAddToHomescreenSetup, isMobile);

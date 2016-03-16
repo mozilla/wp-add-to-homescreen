@@ -1,0 +1,31 @@
+{
+  "name": "wp-add-to-homescreen",
+  "homepage": "https://github.com/mozilla/wp-add-to-homescreen",
+  "authors": [
+    "Salvador de la Puente González <salva@unoyunodiez.com>"
+  ],
+  "description": "Make your WordPress sites to appear in mobile home screens.",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "add",
+    "home",
+    "screen",
+    "app-like",
+    "launcher",
+    "wordpress"
+  ],
+  "license": "GPL2",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "isMobile": "~0.4.0"
+  }
+}

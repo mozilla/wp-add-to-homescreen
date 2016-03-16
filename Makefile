@@ -23,3 +23,5 @@ tools/phpunit.phar:
 	mv tools/phpunit-old.phar tools/phpunit.phar
 	chmod +x $(PHPUNIT)
 
+build:
+	cd wp-add-to-homescreen && bower update

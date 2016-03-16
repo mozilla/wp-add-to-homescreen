@@ -22,6 +22,8 @@ class WP_Add_To_Homescreen_Plugin {
 
     private $add2home_style;
 
+    private $isMobile_script;
+
     private function __construct() {
         $plugin_main_file = plugin_dir_path(__FILE__) . 'wp-add-to-homescreen.php';
         $this->set_urls();
@@ -33,6 +35,7 @@ class WP_Add_To_Homescreen_Plugin {
     }
 
     private function set_urls() {
+        $this->isMobile_script = plugins_url('/lib/vendor/isMobile/isMobile.min.js', __FILE__);
         $this->add2home_script = plugins_url('/lib/js/add-to-homescreen.js', __FILE__);
         $this->add2home_start_script = plugins_url(
             '/lib/js/start-add-to-homescreen.js',
@@ -64,7 +67,8 @@ class WP_Add_To_Homescreen_Plugin {
     public function enqueue_assets() {
         wp_enqueue_style('add-to-homescreen-style', $this->add2home_style);
 
-        wp_register_script('add-to-homescreen', $this->add2home_script, array(), false, true);
+        wp_enqueue_script('isMobile', $this->isMobile_script);
+        wp_register_script('add-to-homescreen', $this->add2home_script, array('isMobile'), false, true);
         wp_localize_script('add-to-homescreen', 'wpAddToHomescreenSetup', array(
             'libUrl' => plugins_url('lib/', __FILE__),
             'invitationText' => 'Make this site appear among your apps!',

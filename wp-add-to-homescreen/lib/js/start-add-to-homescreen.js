@@ -1,4 +1,6 @@
-(function(globals, wpAddToHomescreen){
+(function(globals, wpAddToHomescreen, isMobile){
   'use strict';
-  wpAddToHomescreen.init(document.body, document.body);
-})(window, wpAddToHomescreen);
+  if (isMobile.any) {
+    wpAddToHomescreen.init(document.body, document.body);
+  }
+})(window, wpAddToHomescreen, isMobile);
