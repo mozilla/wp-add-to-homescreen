@@ -1,5 +1,5 @@
 
-(function(globals, setup){
+(function(globals, setup, isMobile){
   'use strict';
 
   var window = globals;
@@ -22,8 +22,10 @@
     },
 
     init: function (overlayContainer, buttonContainer) {
-      this.overlay.element = this.installOverlay(overlayContainer);
-      this.installAddToHomescreenButton(buttonContainer);
+      if (this.isPlatformSupported()) {
+        this.overlay.element = this.installOverlay(overlayContainer);
+        this.installAddToHomescreenButton(buttonContainer);
+      }
     },
 
     installAddToHomescreenButton: function (container) {
@@ -50,12 +52,22 @@
       return overlay;
     },
 
+    isPlatformSupported: function () {
+      return isMobile.any && this.detectBrowser();
+    },
+
     detectBrowser: function () {
       if (/Gecko\/[\d\.]+ Firefox\/[\d\.]+/.test(navigator.userAgent)) {
         return 'fennec';
       }
+      else if (/OPR\/[\d\.]+/.test(navigator.userAgent)) {
+        return 'opera';
+      }
       else if (/Chrome\/[\d\.]+/.test(navigator.userAgent)) {
         return 'chrome';
+      }
+      else if (/AppleWebKit\/[\d\.]+/.test(navigator.userAgent)) {
+        return 'safari';
       }
       else {
         return null;
@@ -118,8 +130,24 @@
       chrome: function (setup) {
         var buffer = document.createDocumentFragment();
         var p = document.createElement('P');
-        p.innerHTML = '<strong>Tap on menu</strong> then tap on <q>Add to ' +
+        p.innerHTML = '<strong>Tap on menu</strong>, then tap on <q>Add to ' +
                       'Home Screen</q>.';
+        buffer.appendChild(p);
+        return buffer;
+      },
+      opera: function (setup) {
+        var buffer = document.createDocumentFragment();
+        var p = document.createElement('P');
+        p.innerHTML = '<strong>Tap on the + icon</strong>, then tap on <q>Add to ' +
+          'Home Screen</q>.';
+        buffer.appendChild(p);
+        return buffer;
+      },
+      safari: function (setup) {
+        var buffer = document.createDocumentFragment();
+        var p = document.createElement('P');
+        p.innerHTML = '<strong>Tap on the share icon</strong>, then tap on <q>Add to ' +
+          'Home Screen</q>.';
         buffer.appendChild(p);
         return buffer;
       }
@@ -127,4 +155,4 @@
 
   };
 
-})(window, wpAddToHomescreenSetup);
+})(window, wpAddToHomescreenSetup, isMobile);
