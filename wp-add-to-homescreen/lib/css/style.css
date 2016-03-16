@@ -1,5 +1,6 @@
 
 #wp-add-to-homescreen-overlay {
+  font-family: sans-serif;
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +12,6 @@
   opacity: 0.0;
   transition: opacity 400ms;
   color: white;
-  font-family: inherit;
   background-color: #D53C30;
 }
 
@@ -56,7 +56,7 @@ body.noscroll {
   bottom: 0;
   transform: translateX(-50%);
   width: 5rem;
-  background-image: url('../imgs/add2home.png');
+  background-image: url('../imgs/add2home.svg');
   height: 5rem;
   background-color: transparent;
   background-size: cover;
