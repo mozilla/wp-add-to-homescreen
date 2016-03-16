@@ -30,6 +30,7 @@ class WP_Add_To_Homescreen_Plugin {
         $this->generate_manifest();
         $this->generate_sw();
         add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
+        add_action('wp_head', array($this, 'add_theme_and_icons'));
         register_activation_hook($plugin_main_file, array($this, 'activate'));
         register_deactivation_hook($plugin_main_file, array($this, 'deactivate'));
     }
@@ -82,6 +83,12 @@ class WP_Add_To_Homescreen_Plugin {
             false,
             true
         );
+    }
+
+    public function add_theme_and_icons() {
+        $icon_path = plugins_url('/lib/imgs/rocket.png', __FILE__);
+        echo '<meta name="theme-color" content="#d53c30" />';
+        echo '<link rel="icon" sizes="144x144" href="' . $icon_path . '" />';
     }
 
     public function activate() {
