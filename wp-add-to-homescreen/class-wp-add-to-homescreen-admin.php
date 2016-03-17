@@ -168,6 +168,24 @@ class WP_Add_To_Homescreen_Admin {
             $overlay_count, 'add-to-homescreen'
         ), number_format_i18n($overlay_count));
         echo '</p>';
+
+        $prompted_count = $this->options->get('addtohomescreen_stats_prompted');
+        echo '<p>';
+        printf(_n(
+            '<strong>%s</strong> user has been prompted about adding your site as an application.',
+            '<strong>%s</strong> users have been prompted about adding your site as an application.',
+            $prompted_count, 'add-to-homescreen'
+        ), number_format_i18n($prompted_count));
+        echo '</p>';
+
+        $installation_count = $this->options->get('addtohomescreen_stats_installed');
+        echo '<p>';
+        printf(_n(
+            '<strong>%s</strong> user has added your site as an application.',
+            '<strong>%s</strong> users have added your site as an application.',
+            $installation_count, 'add-to-homescreen'
+        ), number_format_i18n($installation_count));
+        echo '</p>';
     }
 
 }
