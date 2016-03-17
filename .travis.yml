@@ -1,4 +1,6 @@
 language: php
+node_js:
+  - stable
 php:
   - 5.3
   - 5.6
@@ -12,6 +14,7 @@ matrix:
 before_script:
   - ./install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
   - composer install --working-dir=wp-add-to-homescreen
-  - cd && bower install
+  - npm install -g bower
+  - cd wp-add-to-homescreen && bower install
 
 script: make test
