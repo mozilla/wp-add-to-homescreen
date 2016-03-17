@@ -11,5 +11,7 @@ matrix:
       env: WP_VERSION=latest WP_MULTISITE=1
 before_script:
   - ./install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-  - cd wp-app-manifest && composer install && cd ..
+  - composer install --working-dir=wp-add-to-homescreeen
+  - cd && bower install
+
 script: make test
