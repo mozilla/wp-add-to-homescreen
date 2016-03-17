@@ -12,16 +12,37 @@
     storage: localforage.createInstance({ name: PRIVATE_NAME }),
 
     stats: {
+      registerPrompted: function () {
+        return wpAddToHomescreen.storage.getItem('prompted')
+        .then(function (isPrompted) {
+          if (!isPrompted) {
+            this.sendEvent('prompted');
+          }
+          return Promise.resolve();
+        }.bind(this));
+      },
+
+      registerInstallation: function () {
+        return wpAddToHomescreen.storage.getItem('installed')
+        .then(function (isInstalled) {
+          if (!isInstalled) {
+            this.sendEvent('installed');
+          }
+          return Promise.resolve();
+        }.bind(this));
+      },
+
       sendEvent: function (metric, data) {
         data = data || {};
         data.metric = metric;
         var encodedData = (function () {
           var form = new FormData();
-          Object.keys(data).forEach(key => form.append(key, data[key]));
+          Object.keys(data).forEach(function (key) { form.append(key, data[key]); });
           return form;
         })();
-        var statsRequest = new Request(setup.statsEndPoint, { method: 'POST', body: encodedData });
-        fetch(statsRequest);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', setup.statsEndPoint, true);
+        xhr.send(encodedData);
       }
     },
 
@@ -41,7 +62,7 @@
 
       _registerHowToWasDisplayed: function () {
         wpAddToHomescreen.storage.getItem('how-to-was-displayed')
-        .then(instructionsDisplayed => {
+        .then(function (instructionsDisplayed) {
           if (!instructionsDisplayed) {
             wpAddToHomescreen.stats.sendEvent('how-to-was-displayed');
             wpAddToHomescreen.storage.setItem('how-to-was-displayed', true);
@@ -55,6 +76,7 @@
       if (this.isPlatformSupported()) {
         this.overlay.element = this.installOverlay(overlayContainer);
         this.installAddToHomescreenButton(buttonContainer);
+        window.addEventListener('beforeinstallprompt', this._onBeforeInstall.bind(this));
       }
     },
 
@@ -80,6 +102,18 @@
       var overlay = this.buildOverlay(browser, platform);
       container.appendChild(overlay);
       return overlay;
+    },
+
+    _onBeforeInstall: function (event) {
+      wpAddToHomescreen.stats.registerPrompted()
+      .then(wpAddToHomescreen.storage.setItem('prompted', true));
+
+      event.userChoice.then(function (choice) {
+        if (choice.outcome === 'accepted') {
+          wpAddToHomescreen.stats.registerInstallation()
+          .then(wpAddToHomescreen.storage.setItem('installed', true));
+        }
+      });
     },
 
     isPlatformSupported: function () {
