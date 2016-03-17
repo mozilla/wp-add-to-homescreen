@@ -20,7 +20,8 @@ class WP_Add_To_Homescreen_Admin {
     private $options;
 
     private function __construct() {
-        // $this->options = WP_Offline_Content_Options::get_options();
+        $this->options = WP_Add_To_Homescreen_Options::get_options();
+        add_action('wp_dashboard_setup', array($this, 'add_dashboard_widgets'));
         // add_action('admin_menu', array($this, 'admin_menu'));
         // add_action('admin_init', array($this, 'admin_init'));
     }
@@ -152,6 +153,21 @@ class WP_Add_To_Homescreen_Admin {
         ?>
         <p><?php _e('Precache options allows you to customize which content will be available even if the user never visit it before.', 'offline-content');?></p>
         <?php
+    }
+
+    public function add_dashboard_widgets() {
+        wp_add_dashboard_widget('wp-add-to-homescreen_widget', __('Add To Home Screen', 'add-to-homescreen'), array($this, 'print_widget'));
+    }
+
+    public function print_widget() {
+        $overlay_count = $this->options->get('addtohomescreen_stats_how-to-was-displayed');
+        echo '<p>';
+        printf(_n(
+            '<strong>%s</strong> user saw <em>how to add to home screen</em> instructions.',
+            '<strong>%s</strong> users saw <em>how to add to home screen</em> instructions.',
+            $overlay_count, 'add-to-homescreen'
+        ), number_format_i18n($overlay_count));
+        echo '</p>';
     }
 
 }
