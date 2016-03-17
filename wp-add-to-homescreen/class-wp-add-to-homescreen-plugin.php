@@ -1,6 +1,7 @@
 <?php
 
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-options.php');
+include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-stats.php');
 include_once(plugin_dir_path(__FILE__) . 'vendor/marco-c/wp-web-app-manifest-generator/WebAppManifestGenerator.php');
 include_once(plugin_dir_path(__FILE__) . 'vendor/mozilla/wp-sw-manager/class-wp-sw-manager.php');
 
@@ -18,6 +19,8 @@ class WP_Add_To_Homescreen_Plugin {
 
     private $options;
 
+    private $stats;
+
     private $add2home_script;
 
     private $add2home_start_script;
@@ -30,6 +33,7 @@ class WP_Add_To_Homescreen_Plugin {
 
     private function __construct() {
         $plugin_main_file = plugin_dir_path(__FILE__) . 'wp-add-to-homescreen.php';
+        $this->stats = WP_Add_To_Homescreen_Stats::get_stats();
         $this->options = WP_Add_To_Homescreen_Options::get_options();
         $this->set_urls();
         $this->generate_manifest();
@@ -110,15 +114,7 @@ class WP_Add_To_Homescreen_Plugin {
     }
 
     public function register_statistics() {
-        $metric = $_POST['metric'];
-        if (!$metric) {
-            return;
-        }
-
-        // TODO: Isolate in a PHP class for statistics
-        $current = $this->options->get('addtohomescreen_stats_' . $metric);
-        $this->options->set('addtohomescreen_stats_' . $metric, $current + 1);
-        wp_die();
+        $this->stats->process_event($_POST['event'], $_POST);
     }
 
     public function activate() {

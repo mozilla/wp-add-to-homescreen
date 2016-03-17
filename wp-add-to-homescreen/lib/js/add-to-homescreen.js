@@ -85,9 +85,9 @@
       }.bind(this));
     },
 
-    sendEvent: function (metric, data) {
+    sendEvent: function (event, data) {
       data = data || {};
-      data.metric = metric;
+      data.event = event;
       var encodedData = (function () {
         var form = new FormData();
         Object.keys(data).forEach(function (key) { form.append(key, data[key]); });

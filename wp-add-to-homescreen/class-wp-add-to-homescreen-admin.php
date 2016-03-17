@@ -1,5 +1,6 @@
 <?php
 
+include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-stats.php');
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-options.php');
 
 // Based on: https://codex.wordpress.org/Creating_Options_Pages#Example_.232
@@ -160,31 +161,33 @@ class WP_Add_To_Homescreen_Admin {
     }
 
     public function print_widget() {
-        $overlay_count = $this->options->get('addtohomescreen_stats_how-to-was-displayed');
+        $stats = WP_Add_To_Homescreen_Stats::get_stats();
+        $instructions_shown = $stats->get('instructions-shown');
+        $prompted = $stats->get('prompted');
+        $installed = $stats->get('installed');
+
         echo '<p>';
         printf(_n(
             '<strong>%s</strong> user saw <em>how to add to home screen</em> instructions.',
             '<strong>%s</strong> users saw <em>how to add to home screen</em> instructions.',
-            $overlay_count, 'add-to-homescreen'
-        ), number_format_i18n($overlay_count));
+            $instructions_shown, 'add-to-homescreen'
+        ), number_format_i18n($instructions_shown));
         echo '</p>';
 
-        $prompted_count = $this->options->get('addtohomescreen_stats_prompted');
         echo '<p>';
         printf(_n(
             '<strong>%s</strong> user has been prompted about adding your site as an application.',
             '<strong>%s</strong> users have been prompted about adding your site as an application.',
-            $prompted_count, 'add-to-homescreen'
-        ), number_format_i18n($prompted_count));
+            $prompted, 'add-to-homescreen'
+        ), number_format_i18n($prompted));
         echo '</p>';
 
-        $installation_count = $this->options->get('addtohomescreen_stats_installed');
         echo '<p>';
         printf(_n(
             '<strong>%s</strong> user has added your site as an application.',
             '<strong>%s</strong> users have added your site as an application.',
-            $installation_count, 'add-to-homescreen'
-        ), number_format_i18n($installation_count));
+            $installed, 'add-to-homescreen'
+        ), number_format_i18n($installed));
         echo '</p>';
     }
 
