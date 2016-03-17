@@ -11,70 +11,9 @@
   var wpAddToHomescreen = globals.wpAddToHomescreen = {
     storage: localforage.createInstance({ name: PRIVATE_NAME }),
 
-    stats: {
-      registerPrompted: function () {
-        return wpAddToHomescreen.storage.getItem('prompted')
-        .then(function (isPrompted) {
-          if (!isPrompted) {
-            this.sendEvent('prompted');
-          }
-          return Promise.resolve();
-        }.bind(this));
-      },
-
-      registerInstallation: function () {
-        return wpAddToHomescreen.storage.getItem('installed')
-        .then(function (isInstalled) {
-          if (!isInstalled) {
-            this.sendEvent('installed');
-          }
-          return Promise.resolve();
-        }.bind(this));
-      },
-
-      sendEvent: function (metric, data) {
-        data = data || {};
-        data.metric = metric;
-        var encodedData = (function () {
-          var form = new FormData();
-          Object.keys(data).forEach(function (key) { form.append(key, data[key]); });
-          return form;
-        })();
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', setup.statsEndPoint, true);
-        xhr.send(encodedData);
-      }
-    },
-
-    overlay: {
-      element: null,
-
-      show: function () {
-        wpAddToHomescreen.overlay.element.classList.add('shown');
-        document.body.classList.add('noscroll');
-        this._registerHowToWasDisplayed();
-      },
-
-      hide: function () {
-        wpAddToHomescreen.overlay.element.classList.remove('shown');
-        document.body.classList.remove('noscroll');
-      },
-
-      _registerHowToWasDisplayed: function () {
-        wpAddToHomescreen.storage.getItem('how-to-was-displayed')
-        .then(function (instructionsDisplayed) {
-          if (!instructionsDisplayed) {
-            wpAddToHomescreen.stats.sendEvent('how-to-was-displayed');
-            wpAddToHomescreen.storage.setItem('how-to-was-displayed', true);
-          }
-        });
-      }
-    },
-
-
     init: function (overlayContainer, buttonContainer) {
       if (this.isPlatformSupported()) {
-        this.overlay.element = this.installOverlay(overlayContainer);
+        this.overlay.init(overlayContainer, document.body);
         this.installAddToHomescreenButton(buttonContainer);
         window.addEventListener('beforeinstallprompt', this._onBeforeInstall.bind(this));
       }
@@ -83,7 +22,7 @@
     installAddToHomescreenButton: function (container) {
       var button = document.createElement('BUTTON');
       button.id = 'wp-add-to-homescreen-button';
-      button.onclick = wpAddToHomescreen.overlay.show.bind(wpAddToHomescreen.overlay);
+      button.onclick = wpAddToHomescreen.overlay.show;
       container.appendChild(button);
       window.addEventListener('scroll', function () {
         if (window.scrollY > 0) {
@@ -96,24 +35,14 @@
       return button;
     },
 
-    installOverlay: function (container) {
-      var browser = this.detectBrowser();
-      var platform = this.detectPlatform();
-      var overlay = this.buildOverlay(browser, platform);
-      container.appendChild(overlay);
-      return overlay;
-    },
 
     _onBeforeInstall: function (event) {
-      wpAddToHomescreen.stats.registerPrompted()
-      .then(wpAddToHomescreen.storage.setItem('prompted', true));
-
+      wpAddToHomescreen.stats.logOnce('prompted');
       event.userChoice.then(function (choice) {
         if (choice.outcome === 'accepted') {
-          wpAddToHomescreen.stats.registerInstallation()
-          .then(wpAddToHomescreen.storage.setItem('installed', true));
+          wpAddToHomescreen.stats.logOnce('installed');
         }
-      });
+      }.bind(this));
     },
 
     isPlatformSupported: function () {
@@ -140,6 +69,54 @@
 
     detectPlatform: function () {
       return 'android';
+    }
+  };
+
+  wpAddToHomescreen.stats = {
+
+    logOnce: function (event, data) {
+      var lock = 'done-log-once-' + event;
+      return wpAddToHomescreen.storage.getItem(lock)
+      .then(function (isDone) {
+        if (!isDone) {
+          this.sendEvent(event, data);
+        }
+        return wpAddToHomescreen.storage.setItem(lock, true);
+      }.bind(this));
+    },
+
+    sendEvent: function (event, data) {
+      data = data || {};
+      data.event = event;
+      var encodedData = (function () {
+        var form = new FormData();
+        Object.keys(data).forEach(function (key) { form.append(key, data[key]); });
+        return form;
+      })();
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', setup.statsEndPoint, true);
+      xhr.send(encodedData);
+    }
+  };
+
+  wpAddToHomescreen.overlay = {
+    element: null,
+
+    body: null,
+
+    init: function (overlayContainer, bodyElement) {
+      this.show = this.show.bind(this);
+      this.hide = this.hide.bind(this);
+      this.body = bodyElement;
+      this.element = this.installOverlay(overlayContainer);
+    },
+
+    installOverlay: function (container) {
+      var browser = wpAddToHomescreen.detectBrowser();
+      var platform = wpAddToHomescreen.detectPlatform();
+      var overlay = this.buildOverlay(browser, platform);
+      container.appendChild(overlay);
+      return overlay;
     },
 
     buildOverlay: function (browser, platform) {
@@ -164,7 +141,7 @@
       var dismissButton = document.createElement('BUTTON');
       dismissButton.classList.add('dismiss');
       dismissButton.textContent = setup.dismissText;
-      dismissButton.onclick = wpAddToHomescreen.overlay.hide.bind(wpAddToHomescreen.overlay);
+      dismissButton.onclick = this.hide;
 
       div.appendChild(instructionsSection);
       div.appendChild(explanationImage);
@@ -172,6 +149,17 @@
       div.appendChild(dismissButton);
 
       return div;
+    },
+
+    show: function () {
+      this.element.classList.add('shown');
+      this.body.classList.add('noscroll');
+      wpAddToHomescreen.stats.logOnce('instructions-shown');
+    },
+
+    hide: function () {
+      this.element.classList.remove('shown');
+      this.body.classList.remove('noscroll');
     },
 
     getExplanationImage: function (platform) {
@@ -187,7 +175,7 @@
         var buffer = document.createDocumentFragment();
         var p = document.createElement('P');
         p.innerHTML = '<strong>Long press</strong> the navigation bar and tap ' +
-                      'on <q>Add to Home Screen</q>.';
+          'on <q>Add to Home Screen</q>.';
         buffer.appendChild(p);
         return buffer;
       },
@@ -195,7 +183,7 @@
         var buffer = document.createDocumentFragment();
         var p = document.createElement('P');
         p.innerHTML = '<strong>Tap on menu</strong>, then tap on <q>Add to ' +
-                      'Home Screen</q>.';
+          'Home Screen</q>.';
         buffer.appendChild(p);
         return buffer;
       },
@@ -216,7 +204,5 @@
         return buffer;
       }
     }
-
   };
-
 })(window, wpAddToHomescreenSetup, isMobile, localforage);

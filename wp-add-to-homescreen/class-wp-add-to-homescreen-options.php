@@ -4,10 +4,6 @@ class WP_Add_To_Homescreen_Options {
     private static $instance;
 
     private static $DEFAULTS = array(
-        'offline_network_timeout' => 4000,
-        'offline_cache_name' => 'wpOfflineContent',
-        'offline_debug_sw' => false,
-        'offline_precache' => array('pages' => true)
     );
 
     public static function get_options() {
