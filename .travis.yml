@@ -15,6 +15,6 @@ before_script:
   - ./install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
   - composer install --working-dir=wp-add-to-homescreen
   - npm install -g bower
-  - cd wp-add-to-homescreen && bower install
+  - cd wp-add-to-homescreen && bower install && cd ..
 
 script: make test
