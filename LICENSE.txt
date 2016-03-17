@@ -1,4 +1,5 @@
-wp-app-manifest - Web App Manifest plugin for WordPress
+wp-add-to-homescreen - Add To Homescreen plugin for WordPress
+
 Copyright (C) 2016 by its contributors
 
 This program is free software; you can redistribute it and/or
