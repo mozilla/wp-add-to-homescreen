@@ -37,13 +37,10 @@
 
 
     _onBeforeInstall: function (event) {
-      wpAddToHomescreen.stats.registerPrompted()
-      .then(this.storage.setItem('prompted', true));
-
+      wpAddToHomescreen.stats.logOnce('prompted');
       event.userChoice.then(function (choice) {
         if (choice.outcome === 'accepted') {
-          wpAddToHomescreen.stats.registerInstallation()
-          .then(this.storage.setItem('installed', true));
+          wpAddToHomescreen.stats.logOnce('installed');
         }
       }.bind(this));
     },
@@ -76,33 +73,15 @@
   };
 
   wpAddToHomescreen.stats = {
-    registerPrompted: function () {
-      return wpAddToHomescreen.storage.getItem('prompted')
-      .then(function (isPrompted) {
-        if (!isPrompted) {
-          this.sendEvent('prompted');
-        }
-        return Promise.resolve();
-      }.bind(this));
-    },
 
-    registerInstallation: function () {
-      return wpAddToHomescreen.storage.getItem('installed')
-      .then(function (isInstalled) {
-        if (!isInstalled) {
-          this.sendEvent('installed');
+    logOnce: function (event, data) {
+      var lock = 'done-log-once-' + event;
+      return wpAddToHomescreen.storage.getItem(lock)
+      .then(function (isDone) {
+        if (!isDone) {
+          this.sendEvent(event, data);
         }
-        return Promise.resolve();
-      }.bind(this));
-    },
-
-    registerHowToShown: function () {
-      wpAddToHomescreen.storage.getItem('how-to-was-displayed')
-      .then(function (instructionsDisplayed) {
-        if (!instructionsDisplayed) {
-          this.sendEvent('how-to-was-displayed');
-          wpAddToHomescreen.storage.setItem('how-to-was-displayed', true);
-        }
+        return wpAddToHomescreen.storage.setItem(lock, true);
       }.bind(this));
     },
 
@@ -175,7 +154,7 @@
     show: function () {
       this.element.classList.add('shown');
       this.body.classList.add('noscroll');
-      wpAddToHomescreen.stats.registerHowToShown();
+      wpAddToHomescreen.stats.logOnce('instructions-shown');
     },
 
     hide: function () {
