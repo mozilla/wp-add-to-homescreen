@@ -15,6 +15,7 @@ class WP_Add_To_Homescreen_Options {
                 'mime' => 'image/png'
             );
             self::$DEFAULTS['theme-color'] = '#1A1A1A';
+            self::$DEFAULTS['app-name'] = array('type' => 'title');
             self::$instance = new self();
         }
         return self::$instance;

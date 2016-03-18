@@ -117,6 +117,7 @@ class WP_Add_To_Homescreen_Plugin {
     private function generate_manifest() {
         $manifest = WebAppManifestGenerator::getInstance();
         $manifest->set_field('name', get_bloginfo('name'));
+        $manifest->set_field('short_name', $this->options->get('app-name'));
         $manifest->set_field('display', 'standalone');
         $manifest->set_field('orientation', 'portrait');
         $manifest->set_field('start_url', home_url('/', 'relative'));
