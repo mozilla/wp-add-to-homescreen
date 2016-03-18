@@ -32,7 +32,7 @@ class WP_Add_To_Homescreen_Admin {
     public function admin_init() {
         $options = $this->options;
         $group = self::$options_group;
-        register_setting($group, $options->n('icon'), array($this, 'sanitize_icon'));
+        register_setting($group, $options->o('icon'), array($this, 'sanitize_icon'));
 
         add_settings_section(
             'default',
@@ -42,7 +42,7 @@ class WP_Add_To_Homescreen_Admin {
         );
 
         add_settings_field(
-            $options->n('icon'),
+            $options->o('icon'),
             __('Home Screen icon', 'offline-content'),
             array($this, 'icon_input'),
             self::$options_page_id,
@@ -67,8 +67,8 @@ class WP_Add_To_Homescreen_Admin {
     }
 
     public function icon_input() {
-        $id = $this->options->n('icon');
-        $current_icon = $this->options->get('addtohomescreen_icon');
+        $id = $this->options->o('icon');
+        $current_icon = $this->options->get('icon');
         $explanation = __('Icon to appear in the Home Screen (size must be 144x144px)', 'add-to-homescreen');
         ?>
         <img id="icon-preview" style="width: 144px; height: 144px;"
@@ -86,7 +86,7 @@ class WP_Add_To_Homescreen_Admin {
     }
 
     public function sanitize_icon($new_icon) {
-        $current_icon = $this->options->get('addtohomescreen_icon');
+        $current_icon = $this->options->get('icon');
         if (!isset($new_icon)) {
             return $current_icon;
         }

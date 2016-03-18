@@ -34,7 +34,9 @@ class WP_Add_To_Homescreen_Plugin {
     private function __construct() {
         $plugin_main_file = plugin_dir_path(__FILE__) . 'wp-add-to-homescreen.php';
         $this->stats = WP_Add_To_Homescreen_Stats::get_stats();
-        $this->options = WP_Add_To_Homescreen_Options::get_options();
+        $this->options = WP_Add_To_Homescreen_Options::get_options(array(
+            'icon' =>  plugins_url('/lib/imgs/rocket.png', __FILE__)
+        ));
         $this->set_urls();
         $this->generate_sw();
         add_action('wp_ajax_nopriv_' . self::STATS_ACTION, array($this, 'register_statistics'));
@@ -94,7 +96,7 @@ class WP_Add_To_Homescreen_Plugin {
     public function add_theme_and_icons() {
         $icon_path = plugins_url('/lib/imgs/rocket.png', __FILE__);
         echo '<meta name="theme-color" content="#d53c30" />';
-        echo '<link rel="icon" sizes="144x144" href="' . $this->options->get('addtohomescreen_icon') . '" />';
+        echo '<link rel="icon" sizes="144x144" href="' . $this->options->get('icon') . '" />';
     }
 
     public function register_statistics() {
@@ -102,7 +104,6 @@ class WP_Add_To_Homescreen_Plugin {
     }
 
     public function activate() {
-        $this->options->set_defaults();
         $this->generate_manifest();
     }
 

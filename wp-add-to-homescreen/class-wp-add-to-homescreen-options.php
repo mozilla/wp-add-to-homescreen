@@ -8,9 +8,11 @@ class WP_Add_To_Homescreen_Options {
     private static $DEFAULTS = array(
     );
 
-    public static function get_options() {
+    public static function get_options($defaults=array()) {
         if(!self::$instance) {
-            self::$DEFAULTS['addtohomescreen_icon'] = plugins_url('/lib/imgs/rocket.png', __FILE__);
+            foreach ($defaults as $name => $value) {
+                self::$DEFAULTS[$name] = $value;
+            }
             self::$instance = new self();
         }
         return self::$instance;
@@ -19,8 +21,8 @@ class WP_Add_To_Homescreen_Options {
     private function __construct() {
     }
 
-    public function n($option) {
-        return self::OPTIONS_PREFIX . $option;
+    public function o($name) {
+        return self::OPTIONS_PREFIX . $name;
     }
 
     public function set_defaults() {
@@ -38,12 +40,13 @@ class WP_Add_To_Homescreen_Options {
     }
 
     public function set($name, $value) {
-        update_option($name, $value);
+        $option = $this->o($name);
+        update_option($option, $value);
         return $this;
     }
 
     public function get($name) {
-        $option = $name;
+        $option = $this->o($name);
         $value = get_option($option);
         return ($value !== false) ? $value : self::$DEFAULTS[$name];
     }
