@@ -34,12 +34,21 @@ class WP_Add_To_Homescreen_Admin {
         $group = self::$options_group;
         register_setting($group, $options->o('icon'), array($this, 'sanitize_icon'));
         register_setting($group, $options->o('theme-color'), array($this, 'sanitize_color'));
+        register_setting($group, $options->o('app-name'), array($this, 'sanitize_app_name'));
 
         add_settings_section(
             'default',
             __('UI Configuration', 'add-to-homescreen'),
             function () {},
             self::$options_page_id
+        );
+
+        add_settings_field(
+            $options->o('app-name'),
+            __('App name', 'add-to-homescreen'),
+            array($this, 'app_name_input'),
+            self::$options_page_id,
+            'default'
         );
 
         add_settings_field(
@@ -80,6 +89,25 @@ class WP_Add_To_Homescreen_Admin {
         include_once(plugin_dir_path(__FILE__) . 'lib/pages/admin.php');
     }
 
+    public function app_name_input() {
+        $name = $this->options->o('app-name');
+        $current_app_name = $this->options->get('app-name');
+        $current_type = $current_app_name['type'];
+        $current_value = $current_app_name['value'];
+        ?>
+        <p><label><input type="radio" name="<?php echo $name . '[type]'; ?>"
+                   <?php echo ($current_type === 'title' ? 'checked' : ''); ?>
+                   value="title"/><?php _e('Use the Site Title', 'add-to-homescreen'); ?></label></p>
+        <p><label><input type="radio" name="<?php echo $name . '[type]'; ?>"
+                   <?php echo ($current_type === 'custom' ? 'checked' : ''); ?>
+                   value="custom"/><?php _e('Custom:', 'add-to-homescreen'); ?></label>
+                   <input class="short-text" type="text" name="<?php echo $name . '[value]'; ?>"
+                   value="<?php echo $current_value; ?>"/>
+        </p>
+        <p class="description"><?php _e('This name will appear in your home screen labeling the icon so if you choose a custom name, try to choose one fitting the field provided above.', 'add-to-homescreen'); ?></p>
+        <?php
+    }
+
     public function color_input() {
         $name = $this->options->o('theme-color');
         $current_color = $this->options->get('theme-color');
@@ -88,7 +116,7 @@ class WP_Add_To_Homescreen_Admin {
           <input type="text" class="color-picker" name="<?php echo $name ?>"
            value="<?php echo $current_color; ?>"/>
         </p>
-        <p class="small-text"><?php _e('The color for the overlay showing the instructions. Those browsers supporting themes will tint their UI with this color.', 'add-to-homescreen'); ?></p>
+        <p class="description"><?php _e('The color for the overlay showing the instructions. Those browsers supporting themes will tint their UI with this color.', 'add-to-homescreen'); ?></p>
         <?php
     }
 
@@ -101,7 +129,7 @@ class WP_Add_To_Homescreen_Admin {
          src="<?php echo $current_icon['url']; ?>"
          alt="<?php echo $explanation; ?>"
         />
-        <p class"small-text"><?php echo $explanation; ?></p>
+        <p class="description"><?php echo $explanation; ?></p>
         <p>
          <input type="hidden" id="icon-mime" name="<?php echo "$name" . '[mime]'; ?>"
          value="<?php echo $current_icon['mime']; ?>"/>
@@ -136,6 +164,51 @@ class WP_Add_To_Homescreen_Admin {
             return $current_color;
         }
         return $new_color;
+    }
+
+    public function sanitize_app_name($new_app_name) {
+        $current_app_name = $this->options->get('app-name');
+        if (!$this->check_app_name_integrity($new_app_name)) {
+            $this->add_illegal_app_name_error();
+            return $current_app_name;
+        }
+
+        if ('title' === $new_app_name['type']) {
+            $new_app_name['value'] = get_bloginfo('name');
+            if ($current_app_name !== $new_app_name) {
+                WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
+            }
+            return $new_app_name;
+        }
+
+        $new_app_name['value'] = trim($new_app_name['value']);
+        if (empty($new_app_name['value'])) {
+            add_settings_error(
+                $this->options-o('app-name'),
+                'bad-app-name',
+                __('The name must not be empty.', 'add-to-homescreen')
+            );
+            return $current_app_name;
+        }
+
+        if ($current_app_name !== $new_app_name) {
+            WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
+        }
+        return $new_app_name;
+    }
+
+    private function check_app_name_integrity($app_name) {
+        return is_array($app_name) &&
+               array_key_exists('type', $app_name) &&
+               array_key_exists('value', $app_name);
+    }
+
+    private function add_illegal_app_name_error() {
+        add_settings_error(
+            $this->options->o('app-name'),
+            'illegal-app-name',
+            __('Incorrect application name.', 'add-to-homescreen')
+        );
     }
 
     public function add_dashboard_widgets() {
