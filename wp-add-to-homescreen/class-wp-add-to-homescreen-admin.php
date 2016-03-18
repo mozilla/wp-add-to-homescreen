@@ -2,14 +2,15 @@
 
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-stats.php');
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-options.php');
+include_once(plugin_dir_path(__FILE__) . 'vendor/marco-c/wp-web-app-manifest-generator/WebAppManifestGenerator.php');
 
 // Based on: https://codex.wordpress.org/Creating_Options_Pages#Example_.232
 class WP_Add_To_Homescreen_Admin {
     private static $instance;
 
-    public static $options_page_id = 'offline-options';
+    public static $options_page_id = 'add-to-homescreen-options';
 
-    public static $options_group = 'offline-settings-group';
+    public static $options_group = 'add-to-homescreen-settings-group';
 
     public static function init() {
         if (!self::$instance) {
@@ -23,65 +24,40 @@ class WP_Add_To_Homescreen_Admin {
     private function __construct() {
         $this->options = WP_Add_To_Homescreen_Options::get_options();
         add_action('wp_dashboard_setup', array($this, 'add_dashboard_widgets'));
-        // add_action('admin_menu', array($this, 'admin_menu'));
-        // add_action('admin_init', array($this, 'admin_init'));
+        add_action('admin_menu', array($this, 'admin_menu'));
+        add_action('admin_init', array($this, 'admin_init'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
     }
 
     public function admin_init() {
+        $options = $this->options;
         $group = self::$options_group;
-        register_setting($group, 'offline_network_timeout', array($this, 'sanitize_network_timeout'));
-        register_setting($group, 'offline_debug_sw', array($this, 'sanitize_debug_sw'));
-        register_setting($group, 'offline_precache', array($this, 'sanitize_precache'));
+        register_setting($group, $options->o('icon'), array($this, 'sanitize_icon'));
 
         add_settings_section(
             'default',
-            '',
+            __('UI Configuration', 'add-to-homescreen'),
             function () {},
             self::$options_page_id
         );
 
         add_settings_field(
-            'debug-sw',
-            __('Debug service worker', 'offline-content'),
-            array($this, 'debug_sw_input'),
+            $options->o('icon'),
+            __('Home Screen icon', 'offline-content'),
+            array($this, 'icon_input'),
             self::$options_page_id,
             'default'
         );
+    }
 
-        add_settings_section(
-            'precache',
-            __('Precache', 'offline-content'),
-            array($this, 'print_precache_info'),
-            self::$options_page_id
-        );
-
-        add_settings_field(
-            'precache',
-            __('Content', 'offline-content'),
-            array($this, 'precache_input'),
-            self::$options_page_id,
-            'precache'
-        );
-
-        add_settings_section(
-            'serving-policy',
-            __('Serving policy', 'offline-content'),
-            array($this, 'print_serving_policy_info'),
-            self::$options_page_id
-        );
-
-        add_settings_field(
-            'network-timeout',
-            __('Network timeout', 'offline-content'),
-            array($this, 'network_timeout_input'),
-            self::$options_page_id,
-            'serving-policy'
-        );
+    public function enqueue_scripts() {
+        wp_enqueue_media();
+        wp_enqueue_script('options-page-script', plugins_url('lib/js/options-page.js', __FILE__));
     }
 
     public function admin_menu() {
         add_options_page(
-            __('Offline Content Options', 'offline-content'), __('Offline Content', 'offline-content'),
+            __('Add to Home Screen', 'add-to-homescreen'), __('Add to Home Screen', 'add-to-homescreen'),
             'manage_options', self::$options_page_id, array($this, 'create_admin_page')
         );
     }
@@ -90,70 +66,40 @@ class WP_Add_To_Homescreen_Admin {
         include_once(plugin_dir_path(__FILE__) . 'lib/pages/admin.php');
     }
 
-    public function network_timeout_input() {
-        $network_timeout = $this->options->get('offline_network_timeout') / 1000;
+    public function icon_input() {
+        $id = $this->options->o('icon');
+        $current_icon = $this->options->get('icon');
+        $explanation = __('Icon to appear in the Home Screen (size must be 144x144px)', 'add-to-homescreen');
         ?>
-        <input id="offline-network-timeout" type="number" name="offline_network_timeout"
-         value="<?php echo $network_timeout; ?>" min="1" step="1"
-         class="small-text"/> <?php _e('seconds before serving cached content', 'offline-content'); ?>
+        <img id="icon-preview" style="width: 144px; height: 144px;"
+         src="<?php echo $current_icon; ?>"
+         alt="<?php echo $explanation; ?>"
+        />
+        <p class"small-text"><?php echo $explanation; ?></p>
+        <p>
+         <input type="hidden" id="icon-url" name="<?php echo $id; ?>"
+          value="<?php echo $current_icon; ?>"/>
+         <input type="button" class="button" id="select-icon-button"
+          value="<?php _e('Select...', 'add-to-homescreen'); ?>" />
+        </p>
         <?php
     }
 
-    public function debug_sw_input() {
-        $debug_sw = $this->options->get('offline_debug_sw');
-        ?>
-        <label>
-          <input id="offline-debug-sw" type="checkbox" name="offline_debug_sw"
-           value="true" <?php echo $debug_sw ? 'checked="checked"' : ''; ?>/>
-          <?php _e('Enable debug traces from the service worker in the console.', 'offline-content'); ?>
-        </label>
-        <?php
-    }
-
-   public function precache_input() {
-        $precache = $this->options->get('offline_precache');
-        ?>
-        <label>
-          <input id="offline-precache" type="checkbox" name="offline_precache[pages]"
-           value="pages" <?php echo $precache['pages'] ? 'checked="checked"' : ''; ?>/>
-          <?php _e('Precache published pages.', 'offline-content'); ?>
-        </label>
-        <?php
-    }
-
-    public function sanitize_network_timeout($value) {
-        $value = $value * 1000; // convert to milliseconds
-        if (isset($value) && $value < 1000) {
-            add_settings_error(
-                'network_timeout',
-                'incorrect-network-timeout',
-                __('Network timeout must be at least 1 second.', 'offline-content')
-            );
-            $value = $this->options->get('offline_network_timeout');
+    public function sanitize_icon($new_icon) {
+        $current_icon = $this->options->get('icon');
+        if (!isset($new_icon)) {
+            return $current_icon;
         }
-        return $value;
-    }
-
-    public function sanitize_debug_sw($value) {
-        return isset($value);
-    }
-
-    public function sanitize_precache($value) {
-        $sanitized = array();
-        $sanitized['pages'] = isset($value['pages']);
-        return $sanitized;
-    }
-
-    public function print_serving_policy_info() {
-        ?>
-        <p><?php _e('Offline plugin prefers to serve fresh living content from the Internet but it will serve cached content in case network is not available or not reliable.', 'offline-content');?></p>
-        <?php
-    }
-
-    public function print_precache_info() {
-        ?>
-        <p><?php _e('Precache options allows you to customize which content will be available even if the user never visit it before.', 'offline-content');?></p>
-        <?php
+        if ($current_icon !== $new_icon) {
+            WebAppManifestGenerator::getInstance()->set_field('icons', array(
+                array(
+                    'src' => $new_icon,
+                    'sizes' => '144x144',
+                    'type' => 'image/png' // TODO: detect automatically
+                )
+            ));
+        }
+        return $new_icon;
     }
 
     public function add_dashboard_widgets() {

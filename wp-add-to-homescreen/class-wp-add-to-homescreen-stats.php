@@ -19,7 +19,7 @@ class WP_Add_To_Homescreen_Stats {
     }
 
     public static function get_option_name($event) {
-        return 'addtohomescreen_event:' . $event;
+        return 'event:' . $event;
     }
 
     private $options;
