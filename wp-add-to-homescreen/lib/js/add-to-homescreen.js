@@ -120,8 +120,13 @@
     },
 
     buildOverlay: function (browser, platform) {
+      var bgColor = document.querySelector('meta[name=theme-color]').getAttribute('content');
+      var textColor = this.getContrastedColor(bgColor);
+
       var div = document.createElement('DIV');
       div.id = 'wp-add-to-homescreen-overlay';
+      div.style.backgroundColor = bgColor;
+      div.style.color = textColor;
 
       var invitationParagraph = document.createElement('P');
       invitationParagraph.classList.add('invitation');
@@ -149,6 +154,26 @@
       div.appendChild(dismissButton);
 
       return div;
+    },
+
+    // http://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color#answer-3943023
+    getContrastedColor: function (color) {
+      color = this.normalizeColor(color);
+      var red = parseInt(color.substr(1,2), 16) / 255.0;
+      var green = parseInt(color.substr(3,2), 16) / 255.0;
+      var blue = parseInt(color.substr(5,2), 16) / 255.0;
+      var colors = [red, green, blue].map(function (color) {
+        return (color <= 0.03928) ? (color / 12.92) : Math.pow((color + 0.055)/1.055, 2.4);
+      });
+      var luminance = colors[0] * 0.2126 + colors[1] * 0.7152 + colors[2] * 0.0722;
+      return (luminance > 0.179) ? '#000000' : '#FFFFFF';
+    },
+
+    normalizeColor: function (color) {
+      if (color.length === 4) {
+        color = ['#', color[1], color[1], color[2], color[2], color[3], color[3]].join('');
+      }
+      return color;
     },
 
     show: function () {
