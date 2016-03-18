@@ -72,13 +72,15 @@ class WP_Add_To_Homescreen_Admin {
         $explanation = __('Icon to appear in the Home Screen (size must be 144x144px)', 'add-to-homescreen');
         ?>
         <img id="icon-preview" style="width: 144px; height: 144px;"
-         src="<?php echo $current_icon; ?>"
+         src="<?php echo $current_icon['url']; ?>"
          alt="<?php echo $explanation; ?>"
         />
         <p class"small-text"><?php echo $explanation; ?></p>
         <p>
-         <input type="hidden" id="icon-url" name="<?php echo $id; ?>"
-          value="<?php echo $current_icon; ?>"/>
+         <input type="hidden" id="icon-mime" name="<?php echo "$id" . '[mime]'; ?>"
+         value="<?php echo $current_icon['mime']; ?>"/>
+         <input type="hidden" id="icon-url" name="<?php echo "$id" . '[url]'; ?>"
+          value="<?php echo $current_icon['url']; ?>"/>
          <input type="button" class="button" id="select-icon-button"
           value="<?php _e('Select...', 'add-to-homescreen'); ?>" />
         </p>
@@ -87,15 +89,15 @@ class WP_Add_To_Homescreen_Admin {
 
     public function sanitize_icon($new_icon) {
         $current_icon = $this->options->get('icon');
-        if (!isset($new_icon)) {
+        if (!isset($new_icon['url'])) {
             return $current_icon;
         }
         if ($current_icon !== $new_icon) {
             WebAppManifestGenerator::getInstance()->set_field('icons', array(
                 array(
-                    'src' => $new_icon,
+                    'src' => $new_icon['url'],
                     'sizes' => '144x144',
-                    'type' => 'image/png' // TODO: detect automatically
+                    'type' => $new_icon['mime']
                 )
             ));
         }

@@ -13,7 +13,10 @@
   function updateIconUrl() {
     var iconPreview = document.getElementById('icon-preview');
     var iconUrl = document.getElementById('icon-url');
-    iconUrl.value = this.state().get('selection').first().toJSON().url;
+    var iconMime = document.getElementById('icon-mime');
+    var selection = this.state().get('selection').first();
+    iconUrl.value = selection.get('url');
+    iconMime.value = selection.get('mime');
     iconPreview.src = iconUrl.value;
   }
 

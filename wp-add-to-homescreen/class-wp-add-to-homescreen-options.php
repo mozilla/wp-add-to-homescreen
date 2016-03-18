@@ -8,11 +8,12 @@ class WP_Add_To_Homescreen_Options {
     private static $DEFAULTS = array(
     );
 
-    public static function get_options($defaults=array()) {
+    public static function get_options() {
         if(!self::$instance) {
-            foreach ($defaults as $name => $value) {
-                self::$DEFAULTS[$name] = $value;
-            }
+            self::$DEFAULTS['icon'] = array(
+                'url' => plugins_url('/lib/imgs/rocket.png', __FILE__),
+                'mime' => 'image/png'
+            );
             self::$instance = new self();
         }
         return self::$instance;
