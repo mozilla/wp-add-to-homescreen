@@ -3,6 +3,7 @@
 
   var window = globals;
   var document = globals.document;
+  var $ = window.jQuery;
 
   function showMediaLibrary() {
     var media = globals.wp.media({ multiple: false });
@@ -26,5 +27,8 @@
       event.preventDefault();
       showMediaLibrary();
     };
+
+    $('.color-picker').wpColorPicker();
   });
+
 })(window);
