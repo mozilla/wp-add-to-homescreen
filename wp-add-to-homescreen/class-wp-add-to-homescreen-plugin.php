@@ -98,7 +98,7 @@ class WP_Add_To_Homescreen_Plugin {
 
     public function add_theme_and_icons() {
         $icon_path = plugins_url('/lib/imgs/rocket.png', __FILE__);
-        echo '<meta name="theme-color" content="#d53c30" />';
+        echo '<meta name="theme-color" content="' . $this->options->get('theme-color') . '" />';
         echo '<link rel="icon" sizes="144x144" href="' . $this->options->get('icon')['url'] . '" />';
     }
 
