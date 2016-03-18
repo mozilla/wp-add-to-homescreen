@@ -93,8 +93,7 @@ class WP_Add_To_Homescreen_Admin {
         $name = $this->options->o('app-name');
         $current_app_name = $this->options->get('app-name');
         $current_type = $current_app_name['type'];
-        $current_value = array_key_exists('value', $current_app_name) ?
-                         $current_app_name['value'] : get_bloginfo('name');
+        $current_value = $current_app_name['value'];
         ?>
         <p><label><input type="radio" name="<?php echo $name . '[type]'; ?>"
                    <?php echo ($current_type === 'title' ? 'checked' : ''); ?>
@@ -103,9 +102,9 @@ class WP_Add_To_Homescreen_Admin {
                    <?php echo ($current_type === 'custom' ? 'checked' : ''); ?>
                    value="custom"/><?php _e('Custom:', 'add-to-homescreen'); ?></label>
                    <input class="short-text" type="text" name="<?php echo $name . '[value]'; ?>"
-                    value="<?php echo $current_value; ?>"/>
+                   value="<?php echo $current_value; ?>"/>
         </p>
-        <p class="description"><?php _e('If you choose a custom name, try to choose one fitting the field provided above.', 'add-to-homescreen'); ?></p>
+        <p class="description"><?php _e('This name will appear in your home screen labeling the icon so if you choose a custom name, try to choose one fitting the field provided above.', 'add-to-homescreen'); ?></p>
         <?php
     }
 
@@ -169,16 +168,16 @@ class WP_Add_To_Homescreen_Admin {
 
     public function sanitize_app_name($new_app_name) {
         $current_app_name = $this->options->get('app-name');
-        if (!is_array($new_app_name) || !array_key_exists('type', $new_app_name)) {
-            $this->add_illegal_app_name_error();
-            return $current_app_name;
-        }
-        if ('custom' !== $new_app_name['type'] && !array_key_exists('value', $new_app_name)) {
+        if (!$this->check_app_name_integrity($new_app_name)) {
             $this->add_illegal_app_name_error();
             return $current_app_name;
         }
 
         if ('title' === $new_app_name['type']) {
+            $new_app_name['value'] = get_bloginfo('name');
+            if ($current_app_name !== $new_app_name) {
+                WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
+            }
             return $new_app_name;
         }
 
@@ -192,12 +191,21 @@ class WP_Add_To_Homescreen_Admin {
             return $current_app_name;
         }
 
+        if ($current_app_name !== $new_app_name) {
+            WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
+        }
         return $new_app_name;
+    }
+
+    private function check_app_name_integrity($app_name) {
+        return is_array($app_name) &&
+               array_key_exists('type', $app_name) &&
+               array_key_exists('value', $app_name);
     }
 
     private function add_illegal_app_name_error() {
         add_settings_error(
-            $this->options-o('app-name'),
+            $this->options->o('app-name'),
             'illegal-app-name',
             __('Incorrect application name.', 'add-to-homescreen')
         );
