@@ -14,6 +14,7 @@ class WP_Add_To_Homescreen_Options {
                 'url' => plugins_url('/lib/imgs/rocket.png', __FILE__),
                 'mime' => 'image/png'
             );
+            self::$DEFAULTS['theme-color'] = '#1A1A1A';
             self::$instance = new self();
         }
         return self::$instance;
