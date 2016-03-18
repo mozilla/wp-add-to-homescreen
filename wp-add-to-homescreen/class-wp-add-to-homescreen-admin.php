@@ -33,6 +33,7 @@ class WP_Add_To_Homescreen_Admin {
         $options = $this->options;
         $group = self::$options_group;
         register_setting($group, $options->o('icon'), array($this, 'sanitize_icon'));
+        register_setting($group, $options->o('theme-color'), array($this, 'sanitize_color'));
 
         add_settings_section(
             'default',
@@ -43,7 +44,15 @@ class WP_Add_To_Homescreen_Admin {
 
         add_settings_field(
             $options->o('icon'),
-            __('Home Screen icon', 'offline-content'),
+            __('Theme color', 'add-to-homescreen'),
+            array($this, 'color_input'),
+            self::$options_page_id,
+            'default'
+        );
+
+        add_settings_field(
+            $options->o('theme-color'),
+            __('Home Screen icon', 'add-to-homescreen'),
             array($this, 'icon_input'),
             self::$options_page_id,
             'default'
@@ -52,7 +61,12 @@ class WP_Add_To_Homescreen_Admin {
 
     public function enqueue_scripts() {
         wp_enqueue_media();
-        wp_enqueue_script('options-page-script', plugins_url('lib/js/options-page.js', __FILE__));
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script(
+            'options-page-script',
+            plugins_url('lib/js/options-page.js', __FILE__),
+            array('wp-color-picker')
+        );
     }
 
     public function admin_menu() {
@@ -66,8 +80,20 @@ class WP_Add_To_Homescreen_Admin {
         include_once(plugin_dir_path(__FILE__) . 'lib/pages/admin.php');
     }
 
+    public function color_input() {
+        $name = $this->options->o('theme-color');
+        $current_color = $this->options->get('theme-color');
+        ?>
+        <p>
+          <input type="text" class="color-picker" name="<?php echo $name ?>"
+           value="<?php echo $current_color; ?>"/>
+        </p>
+        <p class="small-text"><?php _e('The color for the overlay showing the instructions. Those browsers supporting themes will tint their UI with this color.', 'add-to-homescreen'); ?></p>
+        <?php
+    }
+
     public function icon_input() {
-        $id = $this->options->o('icon');
+        $name = $this->options->o('icon');
         $current_icon = $this->options->get('icon');
         $explanation = __('Icon to appear in the Home Screen (size must be 144x144px)', 'add-to-homescreen');
         ?>
@@ -77,9 +103,9 @@ class WP_Add_To_Homescreen_Admin {
         />
         <p class"small-text"><?php echo $explanation; ?></p>
         <p>
-         <input type="hidden" id="icon-mime" name="<?php echo "$id" . '[mime]'; ?>"
+         <input type="hidden" id="icon-mime" name="<?php echo "$name" . '[mime]'; ?>"
          value="<?php echo $current_icon['mime']; ?>"/>
-         <input type="hidden" id="icon-url" name="<?php echo "$id" . '[url]'; ?>"
+         <input type="hidden" id="icon-url" name="<?php echo "$name" . '[url]'; ?>"
           value="<?php echo $current_icon['url']; ?>"/>
          <input type="button" class="button" id="select-icon-button"
           value="<?php _e('Select...', 'add-to-homescreen'); ?>" />
@@ -102,6 +128,14 @@ class WP_Add_To_Homescreen_Admin {
             ));
         }
         return $new_icon;
+    }
+
+    public function sanitize_color($new_color) {
+        $current_color = $this->options->get('theme-color');
+        if (empty($new_color) || !preg_match('/^#([0-9a-fA-F]{3}){1,2}$/', $new_color)) {
+            return $current_color;
+        }
+        return $new_color;
     }
 
     public function add_dashboard_widgets() {

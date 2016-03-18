@@ -14,6 +14,7 @@ class WP_Add_To_Homescreen_Options {
                 'url' => plugins_url('/lib/imgs/rocket.png', __FILE__),
                 'mime' => 'image/png'
             );
+            self::$DEFAULTS['theme-color'] = '#1A1A1A';
             self::$instance = new self();
         }
         return self::$instance;
@@ -34,6 +35,13 @@ class WP_Add_To_Homescreen_Options {
         }
     }
 
+    public function get_default($name) {
+        if (!array_key_exists($name, self::$DEFAULTS)) {
+            return NULL;
+        }
+        return self::$DEFAULTS[$name];
+    }
+
     public function remove_all() {
         foreach (self::$DEFAULTS as $name => $value) {
             delete_option($name);
@@ -49,7 +57,7 @@ class WP_Add_To_Homescreen_Options {
     public function get($name) {
         $option = $this->o($name);
         $value = get_option($option);
-        return ($value !== false) ? $value : self::$DEFAULTS[$name];
+        return ($value !== false) ? $value : $this->get_default($name);
     }
 }
 
