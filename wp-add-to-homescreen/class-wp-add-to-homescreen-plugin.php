@@ -111,23 +111,35 @@ class WP_Add_To_Homescreen_Plugin {
         $this->generate_manifest();
     }
 
-    public static function deactivate() {
+    public function deactivate() {
+        $this->remove_manifest();
     }
 
     private function generate_manifest() {
+        $icon = $this->options->get('icon');
+        $app_name = $this->options->get('app-name');
+
         $manifest = WebAppManifestGenerator::getInstance();
         $manifest->set_field('name', get_bloginfo('name'));
-        $manifest->set_field('short_name', $this->options->get('app-name'));
+        $manifest->set_field('short_name', $app_name['value']);
         $manifest->set_field('display', 'standalone');
         $manifest->set_field('orientation', 'portrait');
         $manifest->set_field('start_url', home_url('/', 'relative'));
         $manifest->set_field('icons', array(
             array(
-                'src' => plugins_url('/lib/imgs/rocket.png', __FILE__),
+                'src' => $icon['url'],
                 'sizes' => '144x144',
-                'type' => 'image/png'
+                'type' => $icon['mime']
             )
         ));
+    }
+
+    private function remove_manifest() {
+        $manifest = WebAppManifestGenerator::getInstance();
+        $fields = array('name', 'short_name', 'display', 'orientation', 'start_url', 'icons');
+        foreach ($fields as $field) {
+            $manifest->set_field($field, NULL);
+        }
     }
 
 }
