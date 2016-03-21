@@ -1,0 +1,110 @@
+# Copyright (C) 2016 Add to Home Screen
+# This file is distributed under the same license as the Add to Home Screen package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Add to Home Screen 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-add-to-homescreen\n"
+"POT-Creation-Date: 2016-03-21 13:22:09+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: class-wp-add-to-homescreen-admin.php:41
+msgid "UI Configuration"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:48
+msgid "App name"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:56
+msgid "Theme color"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:64
+msgid "Home Screen icon"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:83 lib/pages/admin.php:2
+msgid "Add to Home Screen"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:100
+msgid "Use the Site Title"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:103
+msgid "Custom:"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:107
+msgid "This name will appear in your home screen labeling the icon so if you choose a custom name, try to choose one fitting the field provided above."
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:119
+msgid "The color for the overlay showing the instructions. Those browsers supporting themes will tint their UI with this color."
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:126
+msgid "Icon to appear in the Home Screen (size must be 144x144px)"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:139
+msgid "Select..."
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:189
+msgid "The name must not be empty."
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:210
+msgid "Incorrect application name."
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:215
+msgid "Add To Home Screen"
+msgstr ""
+
+#: class-wp-add-to-homescreen-admin.php:225
+msgid "<strong>%s</strong> user saw <em>how to add to home screen</em> instructions."
+msgid_plural "<strong>%s</strong> users saw <em>how to add to home screen</em> instructions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: class-wp-add-to-homescreen-admin.php:233
+msgid "<strong>%s</strong> user has been prompted about adding your site as an application."
+msgid_plural "<strong>%s</strong> users have been prompted about adding your site as an application."
+msgstr[0] ""
+msgstr[1] ""
+
+#: class-wp-add-to-homescreen-admin.php:241
+msgid "<strong>%s</strong> user has added your site as an application."
+msgid_plural "<strong>%s</strong> users have added your site as an application."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/pages/admin.php:6
+msgid "Save Changes"
+msgstr ""
+#. Plugin Name of the plugin/theme
+msgid "Add to Home Screen"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/mozilla/add-to-homescreen"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Make your WordPress sites to appear in mobile home screens."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Mozilla"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.mozilla.org/"
+msgstr ""
