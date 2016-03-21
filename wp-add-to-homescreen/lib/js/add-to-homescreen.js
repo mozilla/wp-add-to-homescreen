@@ -100,6 +100,8 @@
   };
 
   wpAddToHomescreen.overlay = {
+    container: null,
+
     element: null,
 
     body: null,
@@ -108,6 +110,7 @@
       this.show = this.show.bind(this);
       this.hide = this.hide.bind(this);
       this.body = bodyElement;
+      this.container = overlayContainer;
       this.element = this.installOverlay(overlayContainer);
     },
 
@@ -179,12 +182,14 @@
     show: function () {
       this.element.classList.add('shown');
       this.body.classList.add('noscroll');
+      this.preventScroll();
       wpAddToHomescreen.stats.logOnce('instructions-shown');
     },
 
     hide: function () {
       this.element.classList.remove('shown');
       this.body.classList.remove('noscroll');
+      this.restoreScroll();
     },
 
     getExplanationImage: function (platform) {
@@ -228,6 +233,22 @@
         buffer.appendChild(p);
         return buffer;
       }
+    },
+
+    preventScroll: function () {
+      ['scroll', 'touchmove', 'mousewheel'].forEach(function (event) {
+        this.container.addEventListener(event, this.noScroll, true);
+      }.bind(this));
+    },
+
+    restoreScroll: function () {
+      ['scroll', 'touchmove', 'mousewheel'].forEach(function (event) {
+        this.container.removeEventListener(event, this.noScroll, true);
+      }.bind(this));
+    },
+
+    noScroll: function (evt) {
+      evt.preventDefault();
     }
   };
 })(window, wpAddToHomescreenSetup, isMobile, localforage);
