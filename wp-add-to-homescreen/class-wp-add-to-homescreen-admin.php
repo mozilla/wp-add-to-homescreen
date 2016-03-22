@@ -27,6 +27,7 @@ class WP_Add_To_Homescreen_Admin {
         add_action('admin_menu', array($this, 'admin_menu'));
         add_action('admin_init', array($this, 'admin_init'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action('update_option_' . $this->options->o('theme-color'), array($this, 'regenerate_icon'));
     }
 
     public function admin_init() {
@@ -244,6 +245,12 @@ class WP_Add_To_Homescreen_Admin {
             $installed, 'add-to-homescreen'
         ), number_format_i18n($installed));
         echo '</p>';
+    }
+
+    public function regenerate_icon($old_value, $new_value) {
+        if ($old_value !== $new_value) {
+            WP_Serve_File::getInstance()->invalidate_files(array('add2home.svg'));
+        }
     }
 
 }

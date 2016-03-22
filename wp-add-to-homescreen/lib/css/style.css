@@ -108,7 +108,6 @@ body.noscroll {
   transform: translateX(-50%);
   width: 64px;
   height: 64px;
-  background-image: url('../imgs/add2home.svg');
   background-color: transparent;
   background-size: cover;
   opacity: 1.0;

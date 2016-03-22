@@ -23,6 +23,7 @@
       var button = document.createElement('BUTTON');
       button.id = 'wp-add-to-homescreen-button';
       button.onclick = wpAddToHomescreen.overlay.show;
+      button.style.backgroundImage = 'url(' + setup.add2homeIconUrl + ')';
       container.appendChild(button);
       window.addEventListener('scroll', function () {
         if (window.scrollY > 0) {
