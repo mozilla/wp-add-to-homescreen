@@ -80,10 +80,11 @@ class WP_Add_To_Homescreen_Plugin {
             false,
             true
         );
+        $app_name = $this->options->get('app-name');
         wp_localize_script('add-to-homescreen', 'wpAddToHomescreenSetup', array(
             'libUrl' => plugins_url('lib/', __FILE__),
-            'invitationText' => 'Make this site appear among your apps!',
-            'dismissText' => 'Got it!',
+            'title' => sprintf(__('Add %s to home screen', 'add-to-homescreen'), $app_name['value']),
+            'dismissText' => __('Got it!', 'add-to-homescreen'),
             'statsEndPoint' => admin_url('/admin-ajax.php?action=' . self::STATS_ACTION)
         ));
         wp_enqueue_script('add-to-homescreen');

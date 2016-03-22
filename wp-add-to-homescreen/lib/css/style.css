@@ -9,25 +9,76 @@
   padding: 1rem;
   pointer-events: none;
   z-index: 200000;
-  opacity: 0.0;
-  transition: opacity 400ms;
+  transform: translateY(100%);
+  transition: transform 700ms;
   color: white;
   background-color: #D53C30;
+  display: flex;
+  align-items: center;
 }
 
 #wp-add-to-homescreen-overlay.shown {
-  opacity: 1.0;
+  transform: translateY(0);
   pointer-events: auto;
 }
 
-#wp-add-to-homescreen-overlay .invitation {
-  font-size: 1.3rem;
-  text-align: center;
+#wp-add-to-homescreen-overlay > div {
+  display: block;
+}
+
+#wp-add-to-homescreen-overlay .arrow {
+  font-size: 30px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: absolute;
+  display: inline-block;
+}
+
+#wp-add-to-homescreen-overlay .arrow.top {
+  top: 0;
+}
+
+#wp-add-to-homescreen-overlay .arrow.left {
+  left: 1%;
+}
+
+#wp-add-to-homescreen-overlay .arrow.right {
+  right: 2%;
+}
+
+#wp-add-to-homescreen-overlay .arrow.bottom {
+  bottom: 0;
+  transform: rotate(180deg);
+}
+
+#wp-add-to-homescreen-overlay .arrow.center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#wp-add-to-homescreen-overlay .arrow.bottom.center {
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+#wp-add-to-homescreen-overlay h2 {
+  font-size: 1.1rem;
+  font-weight: bold;
 }
 
 #wp-add-to-homescreen-overlay .instructions {
-  font-size: 1.3rem;
-  text-align: center;
+  font-size: 1rem;
+}
+
+#wp-add-to-homescreen-overlay button {
+  box-shadow: #BBB 0 2px 0;
+  margin-top: 1rem;
+  padding: 8px 25px;
+  line-height: normal;
+  outline: 0;
+  border: 0;
+  float: left;
 }
 
 #wp-add-to-homescreen-overlay img {
@@ -55,14 +106,15 @@ body.noscroll {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 5rem;
+  width: 64px;
+  height: 64px;
   background-image: url('../imgs/add2home.svg');
-  height: 5rem;
   background-color: transparent;
   background-size: cover;
   opacity: 1.0;
   transition: opacity 400ms;
   pointer-events: auto;
+  margin-bottom: 5px;
 }
 
 #wp-add-to-homescreen-button.hidden {
