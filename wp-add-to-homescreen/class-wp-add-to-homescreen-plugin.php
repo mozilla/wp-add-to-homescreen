@@ -34,12 +34,7 @@ class WP_Add_To_Homescreen_Plugin {
     private function __construct() {
         $plugin_main_file = plugin_dir_path(__FILE__) . 'wp-add-to-homescreen.php';
         $this->stats = WP_Add_To_Homescreen_Stats::get_stats();
-        $this->options = WP_Add_To_Homescreen_Options::get_options(array(
-            'icon' =>  array(
-                'url' => plugins_url('/lib/imgs/rocket.png', __FILE__),
-                'mime' => 'image/png'
-            )
-        ));
+        $this->options = WP_Add_To_Homescreen_Options::get_options();
         $this->set_urls();
         $this->generate_sw();
         add_action('wp_ajax_nopriv_' . self::STATS_ACTION, array($this, 'register_statistics'));
@@ -47,6 +42,8 @@ class WP_Add_To_Homescreen_Plugin {
         add_action('wp_head', array($this, 'add_theme_and_icons'));
         register_activation_hook($plugin_main_file, array($this, 'activate'));
         register_deactivation_hook($plugin_main_file, array($this, 'deactivate'));
+
+        WP_Serve_File::getInstance()->add_file('add2home.svg', array($this, 'generate_add2home_icon'));
     }
 
     private function set_urls() {
@@ -80,11 +77,13 @@ class WP_Add_To_Homescreen_Plugin {
             false,
             true
         );
+        $app_name = $this->options->get('app-name');
         wp_localize_script('add-to-homescreen', 'wpAddToHomescreenSetup', array(
             'libUrl' => plugins_url('lib/', __FILE__),
-            'invitationText' => 'Make this site appear among your apps!',
-            'dismissText' => 'Got it!',
-            'statsEndPoint' => admin_url('/admin-ajax.php?action=' . self::STATS_ACTION)
+            'title' => sprintf(__('Add %s to home screen', 'add-to-homescreen'), $app_name['value']),
+            'dismissText' => __('Got it!', 'add-to-homescreen'),
+            'statsEndPoint' => admin_url('/admin-ajax.php?action=' . self::STATS_ACTION),
+            'add2homeIconUrl' => WP_Serve_File::getInstance()->get_relative_to_host_root_url('add2home.svg')
         ));
         wp_enqueue_script('add-to-homescreen');
         wp_enqueue_script(
@@ -109,6 +108,7 @@ class WP_Add_To_Homescreen_Plugin {
 
     public function activate() {
         $this->generate_manifest();
+        WP_Serve_File::getInstance()->invalidate_files(array('add2home.svg'));
     }
 
     public function deactivate() {
@@ -140,6 +140,15 @@ class WP_Add_To_Homescreen_Plugin {
         foreach ($fields as $field) {
             $manifest->set_field($field, NULL);
         }
+    }
+
+    public function generate_add2home_icon() {
+        $theme_color = $this->options->get('theme-color');
+        $svg = file_get_contents(plugin_dir_path(__FILE__) . 'lib/imgs/add2home.svg');
+        return array(
+            'content' => str_replace('theme-color', $theme_color, $svg),
+            'contentType' => 'img/svg+xml'
+        );
     }
 
 }

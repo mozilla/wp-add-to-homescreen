@@ -22,7 +22,7 @@ Complete native experience by offering [push notifications](https://es.wordpress
 Alternatively,
 
 1. Clone or download the project repository
-2. [Install bower](http://bower.io/) and make `bower install` inside the `wp-add-to-homescreen` folder of the repository.
+2. [Install bower](http://bower.io/) and [composer](https://getcomposer.org/), enter the `wp-add-to-homescreen` folder of the repository and run `composer install && bower install`.
 3. Copy (or symlink) the `wp-add-to-homescreen` folder inside your WordPress installation plugins directory.
 4. Enable the plugin from the admin panel.
 

@@ -23,6 +23,7 @@
       var button = document.createElement('BUTTON');
       button.id = 'wp-add-to-homescreen-button';
       button.onclick = wpAddToHomescreen.overlay.show;
+      button.style.backgroundImage = 'url(' + setup.add2homeIconUrl + ')';
       container.appendChild(button);
       window.addEventListener('scroll', function () {
         if (window.scrollY > 0) {
@@ -100,6 +101,8 @@
   };
 
   wpAddToHomescreen.overlay = {
+    container: null,
+
     element: null,
 
     body: null,
@@ -108,6 +111,7 @@
       this.show = this.show.bind(this);
       this.hide = this.hide.bind(this);
       this.body = bodyElement;
+      this.container = overlayContainer;
       this.element = this.installOverlay(overlayContainer);
     },
 
@@ -120,40 +124,48 @@
     },
 
     buildOverlay: function (browser, platform) {
-      var bgColor = document.querySelector('meta[name=theme-color]').getAttribute('content');
-      var textColor = this.getContrastedColor(bgColor);
+      var themeColor = document.querySelector('meta[name=theme-color]').getAttribute('content');
+      var contrastedColor = this.getContrastedColor(themeColor);
 
-      var div = document.createElement('DIV');
-      div.id = 'wp-add-to-homescreen-overlay';
-      div.style.backgroundColor = bgColor;
-      div.style.color = textColor;
+      var overlay = document.createElement('SECTION');
+      overlay.id = 'wp-add-to-homescreen-overlay';
+      overlay.style.backgroundColor = themeColor;
+      overlay.style.color = contrastedColor;
 
-      var invitationParagraph = document.createElement('P');
-      invitationParagraph.classList.add('invitation');
-      invitationParagraph.textContent = setup.invitationText;
+      var wrapper = document.createElement('DIV');
 
-      var explanationImage = document.createElement('IMG');
-      explanationImage.class = 'explanation';
-      explanationImage.src = this.getExplanationImage(platform);
+      var title = document.createElement('H2');
+      title.textContent = setup.title;
 
-      var hr = document.createElement('hr');
-      hr.class = 'separator';
+      var instructions = this.getInstructions(browser);
+      var explanation = instructions[0];
+      var arrowHint = { vertical: instructions[1], horizontal: instructions[2] };
+
+      var arrow = document.createElement('DIV');
+      arrow.classList.add('arrow');
+      arrow.classList.add(arrowHint.vertical);
+      arrow.classList.add(arrowHint.horizontal);
+      arrow.textContent = "▲";
+      arrow.style.color = contrastedColor;
 
       var instructionsSection = document.createElement('SECTION');
       instructionsSection.classList.add('instructions');
-      instructionsSection.appendChild(this.getInstructions(browser));
+      instructionsSection.appendChild(explanation);
 
       var dismissButton = document.createElement('BUTTON');
       dismissButton.classList.add('dismiss');
       dismissButton.textContent = setup.dismissText;
+      dismissButton.style.color = themeColor;
+      dismissButton.style.backgroundColor = contrastedColor;
       dismissButton.onclick = this.hide;
 
-      div.appendChild(instructionsSection);
-      div.appendChild(explanationImage);
-      div.appendChild(invitationParagraph);
-      div.appendChild(dismissButton);
+      wrapper.appendChild(arrow);
+      wrapper.appendChild(title);
+      wrapper.appendChild(instructionsSection);
+      wrapper.appendChild(dismissButton);
+      overlay.appendChild(wrapper);
 
-      return div;
+      return overlay;
     },
 
     // http://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color#answer-3943023
@@ -179,16 +191,14 @@
     show: function () {
       this.element.classList.add('shown');
       this.body.classList.add('noscroll');
+      this.preventScroll();
       wpAddToHomescreen.stats.logOnce('instructions-shown');
     },
 
     hide: function () {
       this.element.classList.remove('shown');
       this.body.classList.remove('noscroll');
-    },
-
-    getExplanationImage: function (platform) {
-      return setup.libUrl + 'imgs/' + platform + '.png';
+      this.restoreScroll();
     },
 
     getInstructions: function (browser) {
@@ -202,23 +212,23 @@
         p.innerHTML = '<strong>Long press</strong> the navigation bar and tap ' +
           'on <q>Add to Home Screen</q>.';
         buffer.appendChild(p);
-        return buffer;
+        return [buffer, 'top', 'right'];
       },
       chrome: function (setup) {
         var buffer = document.createDocumentFragment();
         var p = document.createElement('P');
-        p.innerHTML = '<strong>Tap on menu</strong>, then tap on <q>Add to ' +
-          'Home Screen</q>.';
+        p.innerHTML = '<strong>Tap on &#8942;</strong> and then tap on <q>Add to ' +
+          'Home screen</q>.';
         buffer.appendChild(p);
-        return buffer;
+        return [buffer, 'top', 'right'];
       },
       opera: function (setup) {
         var buffer = document.createDocumentFragment();
         var p = document.createElement('P');
         p.innerHTML = '<strong>Tap on the + icon</strong>, then tap on <q>Add to ' +
-          'Home Screen</q>.';
+          'home screen</q>.';
         buffer.appendChild(p);
-        return buffer;
+        return [buffer, 'top', 'left'];
       },
       safari: function (setup) {
         var buffer = document.createDocumentFragment();
@@ -226,8 +236,24 @@
         p.innerHTML = '<strong>Tap on the share icon</strong>, then tap on <q>Add to ' +
           'Home Screen</q>.';
         buffer.appendChild(p);
-        return buffer;
+        return [buffer, 'bottom', 'center'];
       }
+    },
+
+    preventScroll: function () {
+      ['scroll', 'touchmove', 'mousewheel'].forEach(function (event) {
+        this.container.addEventListener(event, this.noScroll, true);
+      }.bind(this));
+    },
+
+    restoreScroll: function () {
+      ['scroll', 'touchmove', 'mousewheel'].forEach(function (event) {
+        this.container.removeEventListener(event, this.noScroll, true);
+      }.bind(this));
+    },
+
+    noScroll: function (evt) {
+      evt.preventDefault();
     }
   };
 })(window, wpAddToHomescreenSetup, isMobile, localforage);
