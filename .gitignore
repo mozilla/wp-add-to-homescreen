@@ -2,3 +2,4 @@ tools/
 wp-add-to-homescreen/composer.lock
 wp-add-to-homescreen/vendor/
 wp-add-to-homescreen/lib/vendor/
+svn/
