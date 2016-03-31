@@ -48,7 +48,7 @@ class WP_Add_To_Homescreen_Plugin {
 
     private function set_urls() {
         $this->localForage_script = plugins_url(
-            '/lib/vendor/localForage/dist/localforage.nopromises.min.js',
+            '/lib/vendor/localforage/dist/localforage.nopromises.min.js',
             __FILE__
         );
         $this->isMobile_script = plugins_url('/lib/vendor/isMobile/isMobile.min.js', __FILE__);
