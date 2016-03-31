@@ -3,7 +3,7 @@
 Plugin Name: Add to Home Screen
 Description: Make your WordPress sites to appear in mobile home screens.
 Plugin URI: https://github.com/mozilla/add-to-homescreen
-Version: 0.1.0
+Version: 0.2.0
 Author: Mozilla
 Author URI: https://www.mozilla.org/
 License: GPLv2 or later
