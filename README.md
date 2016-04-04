@@ -12,7 +12,7 @@ First clone the repository.
 Once inside the repository you will need [composer](https://getcomposer.org) and [bower](http://bower.io/) installed. Go to the folder `wp-add-to-homescreen` inside the repository folder and run:
 
 ```
-$ composer install --prefer-source --no-interaction
+$ composer install
 $ bower install
 ```
 
