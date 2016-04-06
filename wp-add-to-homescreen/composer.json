@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-	"marco-c/wp_serve_file": "dev-master",
+        "marco-c/wp_serve_file": "dev-master",
         "marco-c/wp-web-app-manifest-generator": "dev-master",
         "mozilla/wp-sw-manager": "dev-master"
     }

@@ -2,7 +2,6 @@
 
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-stats.php');
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-options.php');
-include_once(plugin_dir_path(__FILE__) . 'vendor/marco-c/wp-web-app-manifest-generator/WebAppManifestGenerator.php');
 
 // Based on: https://codex.wordpress.org/Creating_Options_Pages#Example_.232
 class WP_Add_To_Homescreen_Admin {
@@ -148,7 +147,7 @@ class WP_Add_To_Homescreen_Admin {
             return $current_icon;
         }
         if ($current_icon !== $new_icon) {
-            WebAppManifestGenerator::getInstance()->set_field('icons', array(
+            Mozilla\WebAppManifestGenerator::getInstance()->set_field('icons', array(
                 array(
                     'src' => $new_icon['url'],
                     'sizes' => '144x144',
@@ -177,7 +176,7 @@ class WP_Add_To_Homescreen_Admin {
         if ('title' === $new_app_name['type']) {
             $new_app_name['value'] = get_bloginfo('name');
             if ($current_app_name !== $new_app_name) {
-                WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
+                Mozilla\WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
             }
             return $new_app_name;
         }
@@ -193,7 +192,7 @@ class WP_Add_To_Homescreen_Admin {
         }
 
         if ($current_app_name !== $new_app_name) {
-            WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
+            Mozilla\WebAppManifestGenerator::getInstance()->set_field('short_name', $new_app_name['value']);
         }
         return $new_app_name;
     }

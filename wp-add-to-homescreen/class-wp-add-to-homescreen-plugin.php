@@ -2,8 +2,6 @@
 
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-options.php');
 include_once(plugin_dir_path(__FILE__) . 'class-wp-add-to-homescreen-stats.php');
-include_once(plugin_dir_path(__FILE__) . 'vendor/marco-c/wp-web-app-manifest-generator/WebAppManifestGenerator.php');
-include_once(plugin_dir_path(__FILE__) . 'vendor/mozilla/wp-sw-manager/class-wp-sw-manager.php');
 
 class WP_Add_To_Homescreen_Plugin {
     const STATS_ACTION = 'stats';
@@ -43,7 +41,7 @@ class WP_Add_To_Homescreen_Plugin {
         register_activation_hook($plugin_main_file, array($this, 'activate'));
         register_deactivation_hook($plugin_main_file, array($this, 'deactivate'));
 
-        WP_Serve_File::getInstance()->add_file('add2home.svg', array($this, 'generate_add2home_icon'));
+        Mozilla\WP_Serve_File::getInstance()->add_file('add2home.svg', array($this, 'generate_add2home_icon'));
     }
 
     private function set_urls() {
@@ -62,7 +60,7 @@ class WP_Add_To_Homescreen_Plugin {
 
     private function generate_sw() {
         // An empty SW only to meet Chrome add to homescreen banner requirements.
-        WP_SW_Manager::get_manager()->sw()->add_content(function () { });
+        Mozilla\WP_SW_Manager::get_manager()->sw()->add_content(function () { });
     }
 
     public function enqueue_assets() {
@@ -83,7 +81,7 @@ class WP_Add_To_Homescreen_Plugin {
             'title' => sprintf(__('Add %s to home screen', 'add-to-homescreen'), $app_name['value']),
             'dismissText' => __('Got it!', 'add-to-homescreen'),
             'statsEndPoint' => admin_url('/admin-ajax.php?action=' . self::STATS_ACTION),
-            'add2homeIconUrl' => WP_Serve_File::getInstance()->get_relative_to_host_root_url('add2home.svg')
+            'add2homeIconUrl' => Mozilla\WP_Serve_File::getInstance()->get_relative_to_host_root_url('add2home.svg')
         ));
         wp_enqueue_script('add-to-homescreen');
         wp_enqueue_script(
@@ -108,7 +106,7 @@ class WP_Add_To_Homescreen_Plugin {
 
     public function activate() {
         $this->generate_manifest();
-        WP_Serve_File::getInstance()->invalidate_files(array('add2home.svg'));
+        Mozilla\WP_Serve_File::getInstance()->invalidate_files(array('add2home.svg'));
     }
 
     public function deactivate() {
@@ -119,7 +117,7 @@ class WP_Add_To_Homescreen_Plugin {
         $icon = $this->options->get('icon');
         $app_name = $this->options->get('app-name');
 
-        $manifest = WebAppManifestGenerator::getInstance();
+        $manifest = Mozilla\WebAppManifestGenerator::getInstance();
         $manifest->set_field('name', get_bloginfo('name'));
         $manifest->set_field('short_name', $app_name['value']);
         $manifest->set_field('display', 'standalone');
@@ -135,7 +133,7 @@ class WP_Add_To_Homescreen_Plugin {
     }
 
     private function remove_manifest() {
-        $manifest = WebAppManifestGenerator::getInstance();
+        $manifest = Mozilla\WebAppManifestGenerator::getInstance();
         $fields = array('name', 'short_name', 'display', 'orientation', 'start_url', 'icons');
         foreach ($fields as $field) {
             $manifest->set_field($field, NULL);
