@@ -32,6 +32,9 @@ Almost all browsers support adding bookmarks to the home screen but complete Add
 
 == Change log ==
 
+= 0.3.0 =
+Relying on composer's autoload to manage plugin dependencies.
+
 = 0.2.0 =
 Fixed a case typo in a route which caused the plugin to not work.
 
