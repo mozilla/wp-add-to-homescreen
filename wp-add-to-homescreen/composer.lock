@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cf3f13b39b316c2a8ad55e4b4ef3aaf8",
+    "hash": "6545804a98d8fafbc7661e3bbaad1c1c",
+    "content-hash": "4f50488ded6ea4e9af907e0175e8b720",
     "packages": [
         {
             "name": "marco-c/wp-web-app-manifest-generator",
