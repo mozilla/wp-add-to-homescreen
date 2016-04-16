@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marco-c/wp-web-app-manifest-generator.git",
-                "reference": "df594f6b6ba60030008be0fc48174bec3899ffd1"
+                "reference": "44647ad63d90c81474eb225079df03e0436c8dcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marco-c/wp-web-app-manifest-generator/zipball/df594f6b6ba60030008be0fc48174bec3899ffd1",
-                "reference": "df594f6b6ba60030008be0fc48174bec3899ffd1",
+                "url": "https://api.github.com/repos/marco-c/wp-web-app-manifest-generator/zipball/44647ad63d90c81474eb225079df03e0436c8dcf",
+                "reference": "44647ad63d90c81474eb225079df03e0436c8dcf",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 "source": "https://github.com/marco-c/wp-web-app-manifest-generator/tree/master",
                 "issues": "https://github.com/marco-c/wp-web-app-manifest-generator/issues"
             },
-            "time": "2016-04-04 16:57:49"
+            "time": "2016-04-14 09:39:58"
         },
         {
             "name": "marco-c/wp_serve_file",
@@ -85,12 +85,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mozilla/wp-sw-manager.git",
-                "reference": "cc42eee94c4e1ba1a77890500b6eb02eb52798bd"
+                "reference": "e6618e47bc21cb1a4daea6aca92ddd5d9e8d9c64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mozilla/wp-sw-manager/zipball/cc42eee94c4e1ba1a77890500b6eb02eb52798bd",
-                "reference": "cc42eee94c4e1ba1a77890500b6eb02eb52798bd",
+                "url": "https://api.github.com/repos/mozilla/wp-sw-manager/zipball/e6618e47bc21cb1a4daea6aca92ddd5d9e8d9c64",
+                "reference": "e6618e47bc21cb1a4daea6aca92ddd5d9e8d9c64",
                 "shasum": ""
             },
             "require": {
@@ -113,10 +113,10 @@
             ],
             "description": "Service Worker infrastructure for WordPress plugins.",
             "support": {
-                "source": "https://github.com/mozilla/wp-sw-manager/tree/master",
+                "source": "https://github.com/mozilla/wp-sw-manager/tree/0.5.0",
                 "issues": "https://github.com/mozilla/wp-sw-manager/issues"
             },
-            "time": "2016-04-06 12:37:44"
+            "time": "2016-04-15 17:39:45"
         }
     ],
     "packages-dev": [],

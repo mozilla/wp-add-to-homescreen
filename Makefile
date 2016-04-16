@@ -1,13 +1,22 @@
-.PHONY: reinstall test
+.PHONY: reinstall test svn
+
+PLUGIN_DIR = wp-add-to-homescreen
 
 WP_CLI = tools/wp-cli.phar
 PHPUNIT = tools/phpunit.phar
+PLUGIN_ZIP = $(PLUGIN_DIR).zip
 
 reinstall: $(WP_CLI)
-	$(WP_CLI) plugin uninstall --deactivate wp-add-to-homescreen --path=$(WORDPRESS_PATH)
-	rm -f wp-add-to-homescreen.zip
-	zip wp-add-to-homescreen.zip -r wp-add-to-homescreen/
-	$(WP_CLI) plugin install --activate wp-add-to-homescreen.zip --path=$(WORDPRESS_PATH)
+	$(WP_CLI) plugin uninstall --deactivate $(PLUGIN_DIR) --path=$(WORDPRESS_PATH)
+	rm -f $(PLUGIN_ZIP)
+	zip $(PLUGIN_ZIP) -r $(PLUGIN_DIR)
+	$(WP_CLI) plugin install --activate $(PLUGIN_ZIP) --path=$(WORDPRESS_PATH)
+
+svn:
+	@echo "Copying $(PLUGIN_DIR) contents to svn/trunk"
+	@rsync -a --delete $(PLUGIN_DIR)/* svn/trunk
+	@echo "Removing .git repositories from bundle"
+	@find svn/trunk \( -name ".git" \) -prune -exec rm -rf {} \;
 
 test: $(PHPUNIT)
 	$(PHPUNIT)
@@ -22,6 +31,3 @@ tools/phpunit.phar:
 	wget -P tools -N https://phar.phpunit.de/phpunit-old.phar
 	mv tools/phpunit-old.phar tools/phpunit.phar
 	chmod +x $(PHPUNIT)
-
-build:
-	cd wp-add-to-homescreen && bower update

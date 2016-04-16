@@ -3,6 +3,7 @@ Contributors: delapuente, mozillawebapps
 Tags: progressive, web, applications, progressive web applications, homescreen, banner, home, screen
 Requires at least: 3.5
 Tested up to: 4.4.1
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +32,9 @@ Alternatively,
 Almost all browsers support adding bookmarks to the home screen but complete Add To Home Screen feature is currently supported by Chrome and Opera. [Add To Home Screen banner](https://developers.google.com/web/updates/2015/03/increasing-engagement-with-app-install-banners-in-chrome-for-android) is only supported by Chrome right now.
 
 == Change log ==
+
+= 0.3.1 =
+Updated dependencies include performance improvements and error fixing.
 
 = 0.3.0 =
 Relying on composer's autoload to manage plugin dependencies.
